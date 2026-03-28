@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Player Name Watcher",
+  "version": "1.0",
+  "permissions": ["notifications"],
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["sounds/*.wav"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
