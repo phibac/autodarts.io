@@ -11,14 +11,55 @@ function speak(current){
     speechSynthesis.speak(msg);
 }
 
-// Funktion Anzeige und Wiedergabe von Video
-function play_video(src) {
-    
-
-
-    // var video = "/videos/nod.mp4"""
-    video.play(src);
+// Neuen Tab mit Video öffnen
+function openNewTab() {
+    window.open("videoDisplay.html", "_blank");
 }
+
+// function play_video(src) {
+//     var video = document.querySelector("video");
+//     video.load();
+//     video.play();
+// }
+
+// function play_video(src) {
+//     // Container für Video erstellen
+//     var videoContainer = document.createElement("div");
+//     videoContainer.style.width = "50%";
+//     videoContainer.style.position = "fixed";
+//     videoContainer.style.top = "300px";
+//     videoContainer.style.left = "50%";
+//     videoContainer.style.transform = "translateX(-50%)"; // zentriert
+//     videoContainer.style.zIndex = "9999"; // sicher über allem
+//     videoContainer.style.backgroundColor = "black"; // optional für Sichtbarkeit
+
+//     // Video-Element
+//     var videoElement = document.createElement("video");
+//     videoElement.width = "200px";
+//     videoElement.height = "180px";
+//     videoElement.muted = true;      // nötig für Autoplay
+//     videoElement.autoplay = true;   // Autoplay einschalten
+//     videoElement.playsInline = true;
+
+//     // Source hinzufügen
+//     var videoSource = document.createElement("source");
+//     videoSource.src = src;
+//     videoSource.type = "video/mp4"; // ✅ korrekt
+
+//     videoElement.appendChild(videoSource);
+//     videoContainer.appendChild(videoElement);
+//     document.body.appendChild(videoContainer); // ✅ richtig einfügen
+
+//     // Video laden und abspielen
+//     videoElement.load();
+//     videoElement.play().catch(err => console.log("Autoplay blockiert:", err));
+// }
+
+// Automatisch beim Laden starten
+    // window.addEventListener('load', function() {
+    //     play_video("videos/nod.mp4"); // Pfad zum Video prüfen!
+    // });
+
 
 // Funktion für Wiedergabe der Audiodatei
 function play(src) {
@@ -36,17 +77,44 @@ const getActivePlayerElement = () => {
 
     if(playerInfo[0] == 1 && playerInfo[1] == 8 && playerInfo[2] == 0){
         console.log("Player can finish the game")
-        var videoElement = document.createElement("video");
-        videoElement.style.width = "320px";
-        videoElement.style.height = "180px";
-        // document.querySelector(".ad-ext-player.ad-ext-player-active").appendChild(videoElement);
-        play_video("/videos/nod.mp4")
+        // // openNewTab();
+        // var videoContainer = document.createElement("div");
+        // videoContainer.style.display = "flex";
+        // videoContainer.style.justifyContent = "center";
+        // videoContainer.style.marginTop = "20px";
+
+        // var videoElement = document.createElement("video");
+        // videoElement.setAttribute("width", "320");
+        // videoElement.setAttribute("height", "180");
+        // videoElement.setAttribute("controls", true);
+
+        // var videoSource = document.createElement("source");
+        // videoSource.src = "/videos/nod.mp4";
+        // videoSource.type = "video/mp4";
+
+        // videoElement.appendChild(videoSource);
+        // videoContainer.appendChild(videoElement);
+        // document.body.appendChild(videoContainer);
+
+        // document.querySelector("body").appendChild(videoContainer);
+        // play_video("/videos/nod.mp4")
     }
 
     return document.querySelector(".ad-ext-player.ad-ext-player-active");
 };
 
-const getActivePlayerName = (activeElement) => {
+const getActiveWinner = () => {
+    return document.querySelector("#ad-ext-player-display");
+}
+
+const getActivePlayerScore = (activeElement) => {
+    console.log("Player Score", activeElement.querySelector("*"))
+    var subNode = activeElement.querySelector("*");
+    var playerScore = subNode.querySelector("*");
+    return playerScore.innerText;
+}
+
+const getActivePlayerName = (activeElement) => {    
     if (!activeElement) return null;
 
     const nameElement = activeElement.querySelector(".ad-ext-player-name");
@@ -56,9 +124,21 @@ const getActivePlayerName = (activeElement) => {
     return nameElement.innerText.trim();
 };
 
+
+
 const observerCallback = () => {
     const activeElement = getActivePlayerElement();
     const current = getActivePlayerName(activeElement);
+    const activePlayerScore = getActivePlayerScore(activeElement);
+    console.log(getActiveWinner())
+    console.log("activePlayerScore:", activePlayerScore);
+
+    if (activePlayerScore == "0") {
+        
+        setTimeout(() => {
+            play("/sounds/finish.wav");
+        }, 3000);
+    }
 
     if (!current) return;
 
@@ -78,7 +158,7 @@ const observerCallback = () => {
             }   
             lastActivePlayer = current;
         }
-    }  , 1000);
+    }  , 3000);
 };
 
 const waitForTargetNode = (selector, callback) => {
