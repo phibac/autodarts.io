@@ -12,9 +12,9 @@ function speak(current){
 }
 
 // Neuen Tab mit Video öffnen
-function openNewTab() {
-    window.open("videoDisplay.html", "_blank");
-}
+// function openNewTab() {
+//     window.open("videoDisplay.html", "_blank");
+// }
 
 // function play_video(src) {
 //     var video = document.querySelector("video");
@@ -75,8 +75,16 @@ const getActivePlayerElement = () => {
     var playerInfo = document.querySelector(".ad-ext-player.ad-ext-player-active").innerText;
     console.log(playerInfo.length)
 
-    if(playerInfo[0] == 1 && playerInfo[1] == 8 && playerInfo[2] == 0){
+    var score = playerInfo[0] + playerInfo[1] + playerInfo[2];
+    console.log ("score: ", Number(score))
+
+    if(Number(score) < 180){
         console.log("Player can finish the game")
+
+        var root = document.getElementById(root);
+        var video = document.createElement("div");
+        video.innerText = "TEST";
+        root.appendChild(video);
         // // openNewTab();
         // var videoContainer = document.createElement("div");
         // videoContainer.style.display = "flex";
@@ -129,16 +137,17 @@ const getActivePlayerName = (activeElement) => {
 const observerCallback = () => {
     const activeElement = getActivePlayerElement();
     const current = getActivePlayerName(activeElement);
+    console.log(current);
     const activePlayerScore = getActivePlayerScore(activeElement);
     console.log(getActiveWinner())
     console.log("activePlayerScore:", activePlayerScore);
 
-    if (activePlayerScore == "0") {
+    // if (activePlayerScore == "0") {
         
-        setTimeout(() => {
-            play("/sounds/finish.wav");
-        }, 3000);
-    }
+    //     setTimeout(() => {
+    //         play("/sounds/finish.wav");
+    //     }, 3000);
+    // }
 
     if (!current) return;
 
