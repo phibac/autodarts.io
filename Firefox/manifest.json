@@ -16,7 +16,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["sounds/*.wav", "sounds/*.mp3"],
+      "resources": ["sounds/*.wav", "sounds/*.mp3", "videos/*.mp4"],
       "matches": ["<all_urls>"]
     }
   ]
