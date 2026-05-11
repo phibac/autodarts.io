@@ -11,6 +11,54 @@ function speak(current){
     speechSynthesis.speak(msg);
 }
 
+function root(){
+    let root = document.getElementById("root");
+    // console.log("Element Navigation found:", root);
+    var root_children = root.querySelectorAll("div, p, span");
+    for(var i=0; i < root_children.length; i++){
+        console.log(root_children[i])
+        if(root_children[i].className == "ad-ext-player ad-ext-player-active css-1en42kf"){
+            console.log("Active Player Element: ", root_children[i].childNodes)
+        }
+    }
+}
+
+function detect_navigation(){
+    let element_navigation = document.querySelectorAll(".chakra-stack navigation css-e4driz");
+    console.log("Element Navigation found:", element_navigation);
+}
+
+function detect_playerDisplay(){
+    let element_playerDisplay = document.querySelectorAll("#ad-ext-player-display");
+    console.log("Player Display found:", element_playerDisplay);
+}
+
+function detect_playerTurn(){
+    let element_playerTurn = document.querySelectorAll("#ad-ext-turn");
+    console.log("Player Display found:", element_playerTurn);
+}
+
+function detect_playerTurn_CurrentScore(){
+    let element_playerTurn_CurrentScore = document.querySelectorAll(".css-rrf7rv");
+    console.log("Player Display found:", element_playerTurn_CurrentScore);
+}
+
+function detect_player_active(){
+    let element_player_active = document.querySelectorAll(".ad-ext-player .ad-ext-player-active .css-1en42kf");
+    console.log("Player Active found:", element_player_active);
+}
+
+function detect_player_active_current_score(){
+    let element_player_active_current_score = document.querySelector(".chakra-text ad-ext-player-score css-1r7jzhg");
+    var allPlayerElements = element_player_active_current_score.querySelectorAll("div, p");
+    for(var i=0; i < allPlayerElements.length; i++){
+        console.log(allPlayerElements[i])
+    }
+
+    console.log("Player Active Current Score found:", element_player_active_current_score);
+    
+}
+
 // Funktion für Wiedergabe der Audiodatei
 // function play(src, duration) {
 //     const audio = new Audio(chrome.runtime.getURL(src));
@@ -50,7 +98,7 @@ const getActivePlayerElement = () => {
     // console.log(document.querySelector(".ad-ext-player.ad-ext-player-active").innerText);
 
     var playerInfo = document.querySelector(".ad-ext-player.ad-ext-player-active").innerText;
-    console.log(playerInfo.length)
+    // console.log(playerInfo.length)
     
     return document.querySelector(".ad-ext-player.ad-ext-player-active");
 };
@@ -70,7 +118,7 @@ const getActivePlayerWinner = () => {
 }
 
 const getActivePlayerScore = (activeElement) => {
-    console.log("Player Score", activeElement.querySelector("*"))
+    // console.log("Player Score", activeElement.querySelector("*"))
     var subNode = activeElement.querySelector("*");
     var playerScore = subNode.querySelector("*");
     var winnerScore = playerScore.querySelector("*")
@@ -91,52 +139,60 @@ const getActivePlayerName = (activeElement) => {
 
 const getMissingThrow = () => {
     var activePlayerParent = document.querySelector(".ad-ext-player.ad-ext-player-active");
-    console.log("Player Parent Element", activePlayerParent);
+    // console.log("Player Parent Element", activePlayerParent);
 
     var activePlayerParentChildren = activePlayerParent.children;
     for(var i = 0; i < activePlayerParentChildren.length; i++){
-        console.log("Children Element of Active Player Parent Element", activePlayerParentChildren[i], activePlayerParentChildren[i].className)
+        // console.log("Children Element of Active Player Parent Element", activePlayerParentChildren[i], activePlayerParentChildren[i].className)
     }
 
     var allElements_activePlayerParent = activePlayerParent.querySelectorAll("div, p");
-    console.log("All Elements", allElements_activePlayerParent)
+    // console.log("All Elements", allElements_activePlayerParent)
 
     for(let i = 0; i < allElements_activePlayerParent.length; i++){
-        console.log("All Elements Content", allElements_activePlayerParent[i].innerText);
+        // console.log("All Elements Content", allElements_activePlayerParent[i].innerText);
     }
+};
 
- 
-}
-
-const getPlayerThrows = () =>{
+const getPlayerThrows = () => {
     // Throw Score
     var throwScoreElement = document.getElementById("ad-ext-turn");
     var throwScores = throwScoreElement.querySelectorAll("div, p");
 
     for(let i = 0; i < throwScores.length; i++){
-        console.log("All Score Elements", throwScores[i].innerText);
+        // console.log("All Score Elements", throwScores[i].innerText);
         if(throwScores[i].innerText == "MISS"){
             setTimeout(() => {
                 play("/sounds/miss.mp3", 5000)
             }, 2000);
-        }
+        };
+
         if(throwScores[i].innerText == "T20"){
             setTimeout(() => {
                 play("/sounds/nice.mp3", 5000)
             }, 2000);
-        }
-    }
-}
+        };
+    };
+};
 
 
 
 const observerCallback = () => {
+    root();
+    // detect_navigation();
+    // detect_playerDisplay()
+    // detect_playerTurn();
+    // detect_playerTurn_CurrentScore();
+    // detect_player_active();
+    // detect_player_active_current_score();
+
+
     const activeElement = getActivePlayerElement();
     const current = getActivePlayerName(activeElement);
-    console.log(current);
+    // console.log(current);
     const activePlayerScore = getActivePlayerScore(activeElement);
     // console.log(getActiveWinner(activeElement))
-    console.log("activePlayerScore:", activePlayerScore);
+    // console.log("activePlayerScore:", activePlayerScore);
     getMissingThrow();
 
     if (!current) return;
@@ -157,7 +213,7 @@ const observerCallback = () => {
     var checkout_impossible = [169, 168, 166, 165, 163, 162, 159];
 
     if (current !== lastActivePlayer && Number(activePlayerScore) <= 180 && !checkout_impossible.includes(Number(activePlayerScore))) {
-        console.log("Player can finish the game")
+        // console.log("Player can finish the game")
 
         var videoContainer = document.createElement("div");
         videoContainer.style.position = "fixed";
@@ -222,11 +278,12 @@ const observerCallback = () => {
     // Beispiel mit setTimeout
     setTimeout(() => {
         if (current !== lastActivePlayer) {
-            console.log("Aktiver Spieler:", current);
+            // console.log("Aktiver Spieler:", current);
             handlePlayer(current);
             lastActivePlayer = current;
         }
     }, 3000);
+
     // setTimeout(() => {
 
     //     if (current !== lastActivePlayer) {
