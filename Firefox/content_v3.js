@@ -1,3 +1,4 @@
+// Funktion für Sprachausgabe
 function speak(current){
     const msg = new SpeechSynthesisUtterance(current);
     msg.lang = "en-US";
@@ -10,7 +11,54 @@ function speak(current){
     speechSynthesis.speak(msg);
 }
 
-<<<<<<< Updated upstream
+function root(){
+    let root = document.getElementById("root");
+    // console.log("Element Navigation found:", root);
+    var root_children = root.querySelectorAll("div, p, span");
+    for(var i=0; i < root_children.length; i++){
+        // console.log(root_children[i])
+        if (root_children[i].matches(".ad-ext-player.ad-ext-player-active")){
+            console.log("Active Player Element: ", root_children[i].children)
+        }
+    }
+}
+
+// function detect_navigation(){
+//     let element_navigation = document.querySelectorAll(".chakra-stack navigation css-e4driz");
+//     console.log("Element Navigation found:", element_navigation);
+// }
+
+// function detect_playerDisplay(){
+//     let element_playerDisplay = document.querySelectorAll("#ad-ext-player-display");
+//     console.log("Player Display found:", element_playerDisplay);
+// }
+
+// function detect_playerTurn(){
+//     let element_playerTurn = document.querySelectorAll("#ad-ext-turn");
+//     console.log("Player Display found:", element_playerTurn);
+// }
+
+// function detect_playerTurn_CurrentScore(){
+//     let element_playerTurn_CurrentScore = document.querySelectorAll(".css-rrf7rv");
+//     console.log("Player Display found:", element_playerTurn_CurrentScore);
+// }
+
+// function detect_player_active(){
+//     let element_player_active = document.querySelectorAll(".ad-ext-player .ad-ext-player-active .css-1en42kf");
+//     console.log("Player Active found:", element_player_active);
+// }
+
+// function detect_player_active_current_score(){
+//     let element_player_active_current_score = document.querySelector(".chakra-text ad-ext-player-score css-1r7jzhg");
+//     var allPlayerElements = element_player_active_current_score.querySelectorAll("div, p");
+//     for(var i=0; i < allPlayerElements.length; i++){
+//         console.log(allPlayerElements[i])
+//     }
+
+//     console.log("Player Active Current Score found:", element_player_active_current_score);
+    
+// }
+
 // Funktion für Wiedergabe der Audiodatei
 // function play(src, duration) {
 //     const audio = new Audio(chrome.runtime.getURL(src));
@@ -50,7 +98,7 @@ const getActivePlayerElement = () => {
     // console.log(document.querySelector(".ad-ext-player.ad-ext-player-active").innerText);
 
     var playerInfo = document.querySelector(".ad-ext-player.ad-ext-player-active").innerText;
-    console.log(playerInfo.length)
+    // console.log(playerInfo.length)
     
     return document.querySelector(".ad-ext-player.ad-ext-player-active");
 };
@@ -70,7 +118,7 @@ const getActivePlayerWinner = () => {
 }
 
 const getActivePlayerScore = (activeElement) => {
-    console.log("Player Score", activeElement.querySelector("*"))
+    // console.log("Player Score", activeElement.querySelector("*"))
     var subNode = activeElement.querySelector("*");
     var playerScore = subNode.querySelector("*");
     var winnerScore = playerScore.querySelector("*")
@@ -91,188 +139,81 @@ const getActivePlayerName = (activeElement) => {
 
 const getMissingThrow = () => {
     var activePlayerParent = document.querySelector(".ad-ext-player.ad-ext-player-active");
-    console.log("Player Parent Element", activePlayerParent);
+    // console.log("Player Parent Element", activePlayerParent);
 
     var activePlayerParentChildren = activePlayerParent.children;
     for(var i = 0; i < activePlayerParentChildren.length; i++){
-        console.log("Children Element of Active Player Parent Element", activePlayerParentChildren[i], activePlayerParentChildren[i].className)
+        // console.log("Children Element of Active Player Parent Element", activePlayerParentChildren[i], activePlayerParentChildren[i].className)
     }
 
     var allElements_activePlayerParent = activePlayerParent.querySelectorAll("div, p");
-    console.log("All Elements", allElements_activePlayerParent)
+    // console.log("All Elements", allElements_activePlayerParent)
 
     for(let i = 0; i < allElements_activePlayerParent.length; i++){
-        console.log("All Elements Content", allElements_activePlayerParent[i].innerText);
+        // console.log("All Elements Content", allElements_activePlayerParent[i].innerText);
     }
+};
 
- 
-}
-
-const getPlayerThrows = () =>{
+const getPlayerThrows = () => {
     // Throw Score
     var throwScoreElement = document.getElementById("ad-ext-turn");
     var throwScores = throwScoreElement.querySelectorAll("div, p");
 
     for(let i = 0; i < throwScores.length; i++){
-        console.log("All Score Elements", throwScores[i].innerText);
+        // console.log("All Score Elements", throwScores[i].innerText);
         if(throwScores[i].innerText == "MISS"){
             setTimeout(() => {
                 play("/sounds/miss.mp3", 5000)
             }, 2000);
-        }
+        };
+
         if(throwScores[i].innerText == "T20"){
             setTimeout(() => {
                 play("/sounds/nice.mp3", 5000)
             }, 2000);
-        }
-    }
-}
+        };
+    };
+};
 
 
 
 const observerCallback = () => {
+    root();
+    // detect_navigation();
+    // detect_playerDisplay()
+    // detect_playerTurn();
+    // detect_playerTurn_CurrentScore();
+    // detect_player_active();
+    // detect_player_active_current_score();
+
+
     const activeElement = getActivePlayerElement();
     const current = getActivePlayerName(activeElement);
-    console.log(current);
+    // console.log(current);
     const activePlayerScore = getActivePlayerScore(activeElement);
     // console.log(getActiveWinner(activeElement))
-    console.log("activePlayerScore:", activePlayerScore);
+    // console.log("activePlayerScore:", activePlayerScore);
     getMissingThrow();
-=======
-let audioInstance = null;
 
-function play(src, volume = 1) {
+    if (!current) return;
 
-    try {
-        if (audioInstance) {
-            audioInstance.pause();
-            audioInstance.src = "";
-        }
-
-        audioInstance = new Audio(browser.runtime.getURL(src));
-        audioInstance.volume = volume;
-
-        const playPromise = audioInstance.play();
-
-        if (playPromise !== undefined) {
-            playPromise.catch(err => {
-                console.warn("Audio blocked or interrupted:", err);
-            });
-        }
-
-    } catch (e) {
-        console.error("Audio play error:", e);
-    }
-}
-
-// Map der Spieler zu ihren Sound-Dateien
-const playerSounds = {
-    tabacso: "/sounds/tabacso_2.wav",
-    stefan: "/sounds/stefan.wav",
-    martin: "/sounds/martin.wav",
-    axel: "/sounds/axel_2.mp3",
-    max: "/sounds/max.wav",
-    lukas: "/sounds/lukas.wav"
-};
+    getPlayerThrows();
+    getActivePlayerWinner();
+    // if (current == lastActivePlayer){
+    // if (Number(activePlayerScore) == 0) {
+        
+    //     setTimeout(() => {
+    //         play("/sounds/finish.wav");
+    //     }, 3000);
+    // }
+    // }
 
 
 
-function root(){
-    let root = document.getElementById("root");
-    // console.log("Element Navigation found:", root);
-
-    if (!root) return;
-
-    // Alle Player
-    let allPlayers = root.querySelectorAll(".ad-ext-player");
-
-    // Aktiver Player
-    let activePlayer = root.querySelector(
-        ".ad-ext-player.ad-ext-player-active"
-    );
-
-    // Aktiver Player Name
-    let activePlayerName =
-        activePlayer
-            ?.querySelector(".ad-ext-player-name")
-            ?.textContent
-            ?.trim() || null;
-
-    // Active player points left until win
-    let activePlayerPointsLeft = activePlayer.querySelector(".ad-ext-player-score").textContent;
-
-    // Active players turn
-    let activePlayerTurn = root.querySelector("#ad-ext-turn");
-
-    // Active player current total score
-    let activePlayerCurrentScore =
-        activePlayerTurn
-            ?.querySelector(".ad-ext-turn-points")
-            ?.textContent
-            ?.trim() || null;
-
-    // Active Player Throws (3 times)
-    let activePlayerTurnThrows = [...activePlayerTurn.querySelectorAll(".ad-ext-turn-throw")].map(el => el.textContent.trim());
-
-    // Debug
-    console.log("All Players:", allPlayers.length);
-
-    console.log("Active Player Name:", activePlayerName);
-
-    console.log("Active Player Points Left:", activePlayerPointsLeft);
-
-    console.log("Active Player Current Score:", activePlayerCurrentScore);
-
-    console.log("Active Player Turn Throw:", activePlayerTurnThrows);
-
-    data = {
-        allPlayers:allPlayers, 
-        activePlayerName:activePlayerName, 
-        activePlayerPointsLeft:activePlayerPointsLeft,
-        activePlayerCurrentScore:activePlayerCurrentScore, 
-        activePlayerTurnThrows:activePlayerTurnThrows
-    }
-
-    return data
-};
-
-function handlePlayer(current) {
-
-    const lowerName = current.toLowerCase();
-
-    if (playerSounds[lowerName]) {
-        play(playerSounds[lowerName], 1);
-    } else {
-        speak(current);
-    }
-}
-
-let timeout;
-let lastActivePlayer = null;
-
-const observerCallback = () => {
-
-    clearTimeout(timeout);
-
-    timeout = setTimeout(() => {
->>>>>>> Stashed changes
-
-        const state = root();
-        if (!state) return;
-
-        const currentPlayer = state.activePlayerName;
-        if (!currentPlayer) return;
-
-        if (currentPlayer === lastActivePlayer) return;
-
-        handlePlayer(currentPlayer);
-        lastActivePlayer = currentPlayer;
-
-<<<<<<< Updated upstream
     var checkout_impossible = [169, 168, 166, 165, 163, 162, 159];
 
     if (current !== lastActivePlayer && Number(activePlayerScore) <= 180 && !checkout_impossible.includes(Number(activePlayerScore))) {
-        console.log("Player can finish the game")
+        // console.log("Player can finish the game")
 
         var videoContainer = document.createElement("div");
         videoContainer.style.position = "fixed";
@@ -336,12 +277,19 @@ const observerCallback = () => {
 
     // Beispiel mit setTimeout
     setTimeout(() => {
-        if (current !== lastActivePlayer) {
-            console.log("Aktiver Spieler:", current);
-            handlePlayer(current);
-            lastActivePlayer = current;
-        }
+        const currentPlayer = state.activePlayerName;
+
+        if (!currentPlayer) return;
+
+        if (currentPlayer === lastActivePlayer) return;
+
+        console.log("Neuer aktiver Spieler:", currentPlayer);
+
+        handlePlayer(currentPlayer);
+
+        lastActivePlayer = currentPlayer;
     }, 3000);
+
     // setTimeout(() => {
 
     //     if (current !== lastActivePlayer) {
@@ -365,9 +313,6 @@ const observerCallback = () => {
     //         lastActivePlayer = current;
     //     }
     // }  , 3000);
-=======
-    }, 50);
->>>>>>> Stashed changes
 };
 
 const waitForTargetNode = (selector, callback) => {
