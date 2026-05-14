@@ -10,7 +10,6 @@ function speak(current){
     speechSynthesis.speak(msg);
 }
 
-<<<<<<< Updated upstream
 // Funktion für Wiedergabe der Audiodatei
 // function play(src, duration) {
 //     const audio = new Audio(chrome.runtime.getURL(src));
@@ -138,124 +137,6 @@ const observerCallback = () => {
     // console.log(getActiveWinner(activeElement))
     console.log("activePlayerScore:", activePlayerScore);
     getMissingThrow();
-=======
-let audioInstance = null;
-
-function play(src, volume = 1) {
-
-    try {
-        if (audioInstance) {
-            audioInstance.pause();
-            audioInstance.src = "";
-        }
-
-        audioInstance = new Audio(browser.runtime.getURL(src));
-        audioInstance.volume = volume;
-
-        const playPromise = audioInstance.play();
-
-        if (playPromise !== undefined) {
-            playPromise.catch(err => {
-                console.warn("Audio blocked or interrupted:", err);
-            });
-        }
-
-    } catch (e) {
-        console.error("Audio play error:", e);
-    }
-}
-
-// Map der Spieler zu ihren Sound-Dateien
-const playerSounds = {
-    tabacso: "/sounds/tabacso_2.wav",
-    stefan: "/sounds/stefan.wav",
-    martin: "/sounds/martin.wav",
-    axel: "/sounds/axel_2.mp3",
-    max: "/sounds/max.wav",
-    lukas: "/sounds/lukas.wav"
-};
-
-
-
-function root(){
-    let root = document.getElementById("root");
-    // console.log("Element Navigation found:", root);
-
-    if (!root) return;
-
-    // Alle Player
-    let allPlayers = root.querySelectorAll(".ad-ext-player");
-
-    // Aktiver Player
-    let activePlayer = root.querySelector(
-        ".ad-ext-player.ad-ext-player-active"
-    );
-
-    // Aktiver Player Name
-    let activePlayerName =
-        activePlayer
-            ?.querySelector(".ad-ext-player-name")
-            ?.textContent
-            ?.trim() || null;
-
-    // Active player points left until win
-    let activePlayerPointsLeft = activePlayer.querySelector(".ad-ext-player-score").textContent;
-
-    // Active players turn
-    let activePlayerTurn = root.querySelector("#ad-ext-turn");
-
-    // Active player current total score
-    let activePlayerCurrentScore =
-        activePlayerTurn
-            ?.querySelector(".ad-ext-turn-points")
-            ?.textContent
-            ?.trim() || null;
-
-    // Active Player Throws (3 times)
-    let activePlayerTurnThrows = [...activePlayerTurn.querySelectorAll(".ad-ext-turn-throw")].map(el => el.textContent.trim());
-
-    // Debug
-    console.log("All Players:", allPlayers.length);
-
-    console.log("Active Player Name:", activePlayerName);
-
-    console.log("Active Player Points Left:", activePlayerPointsLeft);
-
-    console.log("Active Player Current Score:", activePlayerCurrentScore);
-
-    console.log("Active Player Turn Throw:", activePlayerTurnThrows);
-
-    data = {
-        allPlayers:allPlayers, 
-        activePlayerName:activePlayerName, 
-        activePlayerPointsLeft:activePlayerPointsLeft,
-        activePlayerCurrentScore:activePlayerCurrentScore, 
-        activePlayerTurnThrows:activePlayerTurnThrows
-    }
-
-    return data
-};
-
-function handlePlayer(current) {
-
-    const lowerName = current.toLowerCase();
-
-    if (playerSounds[lowerName]) {
-        play(playerSounds[lowerName], 1);
-    } else {
-        speak(current);
-    }
-}
-
-let timeout;
-let lastActivePlayer = null;
-
-const observerCallback = () => {
-
-    clearTimeout(timeout);
-
-    timeout = setTimeout(() => {
->>>>>>> Stashed changes
 
         const state = root();
         if (!state) return;
@@ -268,7 +149,6 @@ const observerCallback = () => {
         handlePlayer(currentPlayer);
         lastActivePlayer = currentPlayer;
 
-<<<<<<< Updated upstream
     var checkout_impossible = [169, 168, 166, 165, 163, 162, 159];
 
     if (current !== lastActivePlayer && Number(activePlayerScore) <= 180 && !checkout_impossible.includes(Number(activePlayerScore))) {
@@ -365,9 +245,6 @@ const observerCallback = () => {
     //         lastActivePlayer = current;
     //     }
     // }  , 3000);
-=======
-    }, 50);
->>>>>>> Stashed changes
 };
 
 const waitForTargetNode = (selector, callback) => {
