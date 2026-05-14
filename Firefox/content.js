@@ -74,48 +74,120 @@ function speak(text) {
     speechSynthesis.speak(msg);
 }
 
-let currentAudio = null;
+// let currentAudio = null;
+
+// function play(src, duration) {
+//     let currentAudio = new Audio(chrome.runtime.getURL(src));
+//     currentAudio.muted = true;
+
+//     if (currentAudio) {
+//         currentAudio.pause();
+//         currentAudio.currentTime = 0;
+//         currentAudio.muted = false;
+//     }
+    
+//     currentAudio.play().catch(err => console.log("Audio play error:", err));
+
+//     setTimeout(() => {
+//         if (currentAudio) {
+//             currentAudio.pause();
+//             currentAudio.currentTime = 0;
+//             currentAudio = null;
+//         }
+//     }, duration);
+// }
+
+// let currentAudio = null; // global
+
+// function play(src, duration) {
+//     if (currentAudio) {
+//         currentAudio.pause();
+//         currentAudio.currentTime = 0;
+//         currentAudio = null;
+//     }
+
+//     currentAudio = new Audio(chrome.runtime.getURL(src));
+//     currentAudio.play().catch(err => console.log("Audio play error:", err));
+
+//     setTimeout(() => {
+//         if (currentAudio) {
+//             currentAudio.pause();
+//             currentAudio.currentTime = 0;
+//             currentAudio = null;
+//         }
+//     }, duration);
+// }
 
 function play(src, duration) {
-    if (currentAudio) {
-        currentAudio.pause();
-        currentAudio.currentTime = 0;
-    }
-    currentAudio = new Audio(chrome.runtime.getURL(src));
-    currentAudio.play().catch(err => console.log("Audio play error:", err));
 
-    setTimeout(() => {
-        if (currentAudio) {
-            currentAudio.pause();
-            currentAudio.currentTime = 0;
-            currentAudio = null;
-        }
-    }, duration);
+    browser.runtime.sendMessage({
+        type: "PLAY_SOUND",
+        src
+    });
+
 }
+
+function getAudioDuration(src) {
+
+    return new Promise((resolve, reject) => {
+
+        const audio = new Audio();
+
+        audio.src = src;
+
+        audio.addEventListener("loadedmetadata", () => {
+
+            resolve(audio.duration);
+
+        });
+
+        audio.addEventListener("error", (err) => {
+
+            reject(err);
+
+        });
+
+    });
+};
 
 function handlePlayer(playerName) {
     const lowerName = playerName.toLowerCase();
 
     if (playerSounds[lowerName]) {
-        play(playerSounds[lowerName], 1);
+        let ms = null;
+        getAudioDuration(
+                browser.runtime.getURL(playerSounds[lowerName])
+            )
+            .then(duration => {
+
+                ms = duration * 1000;
+
+                console.log(Math.round(ms));
+
+        });
+
+        play(playerSounds[lowerName], Math.round(ms));
     } else {
         speak(playerName);
     }
 }
 
-let timeout = null;
+// Execution of functions during playing darts
+// let timeout = null;
 let lastActivePlayer = null;
 
 const observerCallback = () => {
 
-    clearTimeout(timeout);
+    // clearTimeout(timeout);
 
-    timeout = setTimeout(() => {
+    // timeout = setTimeout(() => {
+    setTimeout(() => {
 
         const state = getState();
 
         if (!state) return;
 
+        // Current dart player section
         const currentPlayer = state.activePlayerName;
 
         if (!currentPlayer) return;
@@ -124,12 +196,13 @@ const observerCallback = () => {
         if (currentPlayer === lastActivePlayer) return;
 
         console.log("Aktiver Spieler:", currentPlayer);
-
+        
+        // Function "Speak or play Current Player Name"
         handlePlayer(currentPlayer);
 
         lastActivePlayer = currentPlayer;
 
-    }, 300); // kleines debounce
+    }, 1000); // kleines debounce
 };
 
 function waitForTargetNode(selector, callback) {
