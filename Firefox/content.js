@@ -119,7 +119,7 @@ function speak(text) {
 // }
 
 function play(src, duration) {
-
+    console.log("Play sound", src)
     browser.runtime.sendMessage({
         type: "PLAY_SOUND",
         src
@@ -151,8 +151,8 @@ function getAudioDuration(src) {
 };
 
 function handlePlayer(playerName) {
-    const lowerName = playerName.toLowerCase();
 
+    const lowerName = playerName.toLowerCase();
     if (playerSounds[lowerName]) {
         let ms = null;
         getAudioDuration(
@@ -173,36 +173,56 @@ function handlePlayer(playerName) {
 }
 
 // Execution of functions during playing darts
-// let timeout = null;
+let timeout = null;
 let lastActivePlayer = null;
+let lastThrowCount = 0;
 
 const observerCallback = () => {
 
-    // clearTimeout(timeout);
+    clearTimeout(timeout);
 
-    // timeout = setTimeout(() => {
-    setTimeout(() => {
+    timeout = setTimeout(() => {
 
         const state = getState();
 
         if (!state) return;
 
-        // Current dart player section
-        const currentPlayer = state.activePlayerName;
+        const playerName = state.activePlayerName;
+        const playerTurnThrows = state.activePlayerTurnThrows || [];
 
-        if (!currentPlayer) return;
+        if (!playerName) return;
 
-        // Kein Wechsel
-        if (currentPlayer === lastActivePlayer) return;
+        // Nur reagieren wenn neuer Dart geworfen wurde
+        if (playerTurnThrows.length === lastThrowCount) return;
 
-        console.log("Aktiver Spieler:", currentPlayer);
-        
-        // Function "Speak or play Current Player Name"
-        handlePlayer(currentPlayer);
+        lastThrowCount = playerTurnThrows.length;
 
-        lastActivePlayer = currentPlayer;
+        // Letzten Wurf holen
+        const lastThrow = playerTurnThrows[playerTurnThrows.length - 1]
+            ?.trim()
+            .toUpperCase();
 
-    }, 1000); // kleines debounce
+        console.log("Last Throw:", lastThrow);
+
+        // Sounds
+        if (lastThrow === "T20") {
+            play("/sounds/nice.mp3", 2000);
+        }
+
+        if (lastThrow === "MISS") {
+            play("/sounds/miss.mp3", 2000);
+        }
+
+        // Play player name when new players turn
+        if (playerName === lastActivePlayer) return;
+
+        console.log("Aktiver Spieler:", playerName);
+
+        handlePlayer(playerName);
+
+        lastActivePlayer = playerName;
+
+    }, 300);
 };
 
 function waitForTargetNode(selector, callback) {
