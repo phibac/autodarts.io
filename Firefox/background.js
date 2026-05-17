@@ -8,3 +8,19 @@ chrome.runtime.onMessage.addListener((msg) => {
     });
   }
 });
+
+browser.runtime.onInstalled.addListener(async () => {
+
+    const tabs = await browser.tabs.query({});
+
+    const exists = tabs.some(t => t.url?.includes("player.html"));
+
+    if (!exists) {
+
+        browser.tabs.create({
+            url: browser.runtime.getURL("player.html"),
+            active: false
+        });
+
+    }
+});
